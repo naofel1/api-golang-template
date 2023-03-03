@@ -1,0 +1,15 @@
+{
+  "[go]": {
+    "editor.formatOnSave": true
+  },
+  "gopls": {
+    "formatting.gofumpt": true,
+    "ui.semanticTokens": true
+  },
+  "go.formatTool": "gofumpt",
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--fast"],
+  "github.copilot.advanced": {
+	
+  }
+}

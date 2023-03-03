@@ -1,0 +1,817 @@
+{
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "This document's purpose is to document the API\nused by this backend for further interaction with the front-end",
+        "title": "API",
+        "termsOfService": "https://domain.TLD",
+        "contact": {
+            "name": "Your name",
+            "url": "https://domain.TLD",
+            "email": "info@domain.TLD"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/admin/login": {
+            "post": {
+                "description": "This handler purpose is to log in an admin by the specified email\nand password, it then returns a specific Token Pair associated with the admin.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Sign in an admin",
+                "parameters": [
+                    {
+                        "description": "Admin login",
+                        "name": "admin",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.adminLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tokenservice.PairToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorInvalidArgs"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/logout": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Signout handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.SuccessStatus"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Me admin entity",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.AdminFront"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Setting"
+                ],
+                "summary": "Update the Admin Profile",
+                "parameters": [
+                    {
+                        "description": "Admin new info",
+                        "name": "adminInfo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/adminsettinghandler.updateAdmin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.AdminFront"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorInvalidArgs"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Signup admin entity",
+                "parameters": [
+                    {
+                        "description": "Admin registration",
+                        "name": "admin",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.registerAdmin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/tokenservice.PairToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorInvalidArgs"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/tokens": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Return new token and refresh token for admin",
+                "parameters": [
+                    {
+                        "description": "Your refresh token",
+                        "name": "refreshToken",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.tokensReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.tokensResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/login": {
+            "post": {
+                "description": "This handler purpose is to log in a student by the specified login\nand password, it then returns a specific Token Pair associated with the student.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Student Authentication"
+                ],
+                "summary": "Sign in a student",
+                "parameters": [
+                    {
+                        "description": "Student login",
+                        "name": "student",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.studentLogin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tokenservice.PairToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorInvalidArgs"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/logout": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Student Authentication"
+                ],
+                "summary": "Signout handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.SuccessStatus"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Student Authentication"
+                ],
+                "summary": "Me student entity",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ent.StudentFront"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Student Authentication"
+                ],
+                "summary": "Signup student entity",
+                "parameters": [
+                    {
+                        "description": "Student registration",
+                        "name": "student",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.registerStudent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/tokenservice.PairToken"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorInvalidArgs"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/tokens": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Student Authentication"
+                ],
+                "summary": "Return new token and refresh token for student",
+                "parameters": [
+                    {
+                        "description": "Your refresh token",
+                        "name": "refreshToken",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.tokensReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/authenticationhandler.tokensResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apistatus.ErrorAPI"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "adminsettinghandler.updateAdmin": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6
+                }
+            }
+        },
+        "apistatus.Error": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/apistatus.Type"
+                }
+            }
+        },
+        "apistatus.ErrorAPI": {
+            "type": "object",
+            "properties": {
+                "error": {}
+            }
+        },
+        "apistatus.ErrorInvalidArgs": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/apistatus.Error"
+                },
+                "invalid_argument(s)": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/apistatus.InvalidArgument"
+                    }
+                }
+            }
+        },
+        "apistatus.InvalidArgument": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "param": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                },
+                "value": {}
+            }
+        },
+        "apistatus.SuccessStatus": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "apistatus.Type": {
+            "type": "string",
+            "enum": [
+                "AUTHORIZATION",
+                "BAD_REQUEST",
+                "CONFLICT",
+                "INTERNAL",
+                "NOT_FOUND",
+                "PAYLOAD_TOO_LARGE",
+                "SERVICE_UNAVAILABLE",
+                "UNSUPPORTED_MEDIA_TYPE"
+            ],
+            "x-enum-comments": {
+                "Authorization": "Authentication Failures -",
+                "BadRequest": "Validation errors / BadInput",
+                "Conflict": "Already exists (eg, create account with existent email) - 409",
+                "Internal": "Server (500) and fallback errors",
+                "NotFound": "For not finding resource",
+                "PayloadTooLarge": "for uploading tons of JSON, or an image over the limit - 413",
+                "ServiceUnavailable": "For long-running handlers",
+                "UnsupportedMediaType": "for http 415"
+            },
+            "x-enum-varnames": [
+                "Authorization",
+                "BadRequest",
+                "Conflict",
+                "Internal",
+                "NotFound",
+                "PayloadTooLarge",
+                "ServiceUnavailable",
+                "UnsupportedMediaType"
+            ]
+        },
+        "authenticationhandler.adminLogin": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "authenticationhandler.registerAdmin": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "authenticationhandler.registerStudent": {
+            "type": "object",
+            "required": [
+                "firstname",
+                "gender",
+                "lastname",
+                "password",
+                "pseudo"
+            ],
+            "properties": {
+                "firstname": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                },
+                "gender": {
+                    "type": "string",
+                    "enum": [
+                        "men",
+                        "women",
+                        "neutral"
+                    ]
+                },
+                "lastname": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 1
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 6
+                },
+                "pseudo": {
+                    "type": "string"
+                }
+            }
+        },
+        "authenticationhandler.studentLogin": {
+            "type": "object",
+            "required": [
+                "login",
+                "password"
+            ],
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "authenticationhandler.tokensReq": {
+            "type": "object",
+            "properties": {
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "authenticationhandler.tokensResponse": {
+            "type": "object",
+            "properties": {
+                "duration": {
+                    "type": "integer"
+                },
+                "tokens": {
+                    "$ref": "#/definitions/tokenservice.PairToken"
+                }
+            }
+        },
+        "ent.AdminDisplayFront": {
+            "type": "object",
+            "properties": {
+                "pseudo": {
+                    "description": "Pseudo holds the value of the \"pseudo\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.AdminFront": {
+            "type": "object",
+            "properties": {
+                "display": {
+                    "$ref": "#/definitions/ent.AdminDisplayFront"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "ent.StudentDisplayFront": {
+            "type": "object",
+            "properties": {
+                "birthday": {
+                    "type": "string"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "$ref": "#/definitions/primitive.Gender"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "pseudo": {
+                    "type": "string"
+                }
+            }
+        },
+        "ent.StudentFront": {
+            "type": "object",
+            "properties": {
+                "display": {
+                    "$ref": "#/definitions/ent.StudentDisplayFront"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "primitive.Gender": {
+            "type": "string",
+            "enum": [
+                "men",
+                "women",
+                "neutral"
+            ],
+            "x-enum-varnames": [
+                "GenderMen",
+                "GenderWomen",
+                "GenderNeutral"
+            ]
+        },
+        "tokenservice.PairToken": {
+            "description": "PairToken is used for returning pairs of id and refresh tokens",
+            "type": "object",
+            "properties": {
+                "idToken": {
+                    "type": "string"
+                },
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "JWT Token",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

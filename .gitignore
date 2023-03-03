@@ -1,0 +1,10 @@
+.env
+.scannerwork
+.DS_Store
+
+logs/*.log
+
+tmp
+bin/*
+
+*.pem

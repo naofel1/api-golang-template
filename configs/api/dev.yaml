@@ -1,0 +1,67 @@
+---
+app_info:
+  mode: development
+host:
+  address: 'domain.TLD'
+  port: '80'
+  base_url: "/api"
+server:
+  client_timeout: '5s'
+  read_timeout: '5s'
+  write_timeout: '5s'
+  shutdown_grace_period: "30s"
+#### DATABASE ####
+mariadb:
+  user: root
+  host: mysql
+  net: tcp
+  port: 3306
+  db_name: api_dev
+  parseTime: true
+  params:
+    charset: utf8mb4
+    loc: UTC
+redis:
+  connection_string: redis-dev-master:6379
+  selected_db: 0
+#### Token management ####
+jwt:
+  token_duration: '60m'
+  refresh_duration: '80m'
+certs:
+  pub_student: configs/certs/student_public.pem
+  priv_student: configs/certs/student.pem
+  pub_admin: configs/certs/admin_public.pem
+  priv_admin: configs/certs/admin.pem
+#### Client ####
+discord:
+  enabled: false
+  channels:
+    session: "my_discord_id_channel"
+centrifugo:
+  connection_string: http://dev.internal.centrifugo.domain.TLD/api
+jaeger:
+  connection_string: http://jaeger-v2-collector:14268/api/traces
+aws:
+  region: fr-par
+  endpoint: https://s3.fr-par.scw.cloud
+  bucket_name: api
+mailgun:
+  client_domain: domain.TLD
+  mailer:
+    reset_password:
+      sender: contact@domain.TLD
+      subject: Reset your Password
+#### Server configuration ####
+cors:
+  allowed_origins:
+  - "*"
+  allowed_headers:
+  - Origin
+  - Content-Type
+  - X-Auth-Token
+  - Authorization
+  allowed_methods:
+  - GET
+  - POST
+  - DELETE

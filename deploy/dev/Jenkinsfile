@@ -1,0 +1,57 @@
+/* Requires the Docker Pipeline plugin */
+pipeline {
+    agent  {
+        label 'dind-agent'
+    }
+    environment {
+        GOCACHE = '/home/jenkins/.gocache'
+        registry = 'rg.fr-par.scw.cloud/api/dev-mono-api'
+        registryCredential = 'registry-credentials'
+    }
+    stages {
+        stage('Building image') {
+            steps {
+                script {
+                    dockerImage = docker.build(registry + ":$BUILD_NUMBER", '-f deploy/dev/Dockerfile.monolith .')
+                }
+            }
+        }
+        stage('Deploy Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://rg.fr-par.scw.cloud/api', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Update image on ArgoCD') {
+            environment {
+                HELM_GIT_REPO_URL = 'gitlab.com/my-api/kubernetes.git'
+                GIT_CREDS = credentials('git-credentials')
+                GIT_REPO_EMAIL = 'jenkins@jenkins.com'
+                GIT_REPO_BRANCH = 'dev'
+            // Update above variables with your user details
+            }
+            steps {
+                sh('git clone https://$GIT_CREDS_USR:$GIT_CREDS_PSW@$HELM_GIT_REPO_URL')
+                sh('git config --global user.email $GIT_REPO_EMAIL')
+                dir('kubernetes') {
+                    sh('git checkout $GIT_REPO_BRANCH')
+                    dir('deployment/api/dev') {
+                        //install done
+                        sh '''#!/bin/bash
+                            ls -lth
+                            yq eval '.spec.template.spec.containers[0].image = strenv(registry) + ":" + strenv(BUILD_NUMBER)' -i monolith/monolith-deployment.yaml
+                            cat monolith/monolith-deployment.yaml
+                            pwd
+                        '''
+                        sh('git add monolith/monolith-deployment.yaml')
+                        sh('git commit -m "[Jenkins] Triggered Build - Update dev-mono-api image to $BUILD_NUMBER"')
+                        sh('git push https://$GIT_CREDS_USR:$GIT_CREDS_PSW@$HELM_GIT_REPO_URL')
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "admin": true,
+	"engine": "memory",
+    "allowed_origins": ["*"],
+    "token_hmac_secret_key": "centrifugo",
+    "admin_password": "centrifugo",
+    "admin_secret": "centrifugo",
+    "api_key": "centrifugo",
+    "client_insecure": true,
+    "history_size": 10,
+    "history_ttl": "60s",
+    "proxy_http_headers": [
+        "Cookie"
+    ]
+}

@@ -1,0 +1,544 @@
+definitions:
+  adminsettinghandler.updateAdmin:
+    properties:
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+    type: object
+  apistatus.Error:
+    properties:
+      message:
+        type: string
+      type:
+        $ref: '#/definitions/apistatus.Type'
+    type: object
+  apistatus.ErrorAPI:
+    properties:
+      error: {}
+    type: object
+  apistatus.ErrorInvalidArgs:
+    properties:
+      error:
+        $ref: '#/definitions/apistatus.Error'
+      invalid_argument(s):
+        items:
+          $ref: '#/definitions/apistatus.InvalidArgument'
+        type: array
+    type: object
+  apistatus.InvalidArgument:
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+      param:
+        type: string
+      tag:
+        type: string
+      value: {}
+    type: object
+  apistatus.SuccessStatus:
+    properties:
+      status:
+        type: string
+    type: object
+  apistatus.Type:
+    enum:
+    - AUTHORIZATION
+    - BAD_REQUEST
+    - CONFLICT
+    - INTERNAL
+    - NOT_FOUND
+    - PAYLOAD_TOO_LARGE
+    - SERVICE_UNAVAILABLE
+    - UNSUPPORTED_MEDIA_TYPE
+    type: string
+    x-enum-comments:
+      Authorization: Authentication Failures -
+      BadRequest: Validation errors / BadInput
+      Conflict: Already exists (eg, create account with existent email) - 409
+      Internal: Server (500) and fallback errors
+      NotFound: For not finding resource
+      PayloadTooLarge: for uploading tons of JSON, or an image over the limit - 413
+      ServiceUnavailable: For long-running handlers
+      UnsupportedMediaType: for http 415
+    x-enum-varnames:
+    - Authorization
+    - BadRequest
+    - Conflict
+    - Internal
+    - NotFound
+    - PayloadTooLarge
+    - ServiceUnavailable
+    - UnsupportedMediaType
+  authenticationhandler.adminLogin:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  authenticationhandler.registerAdmin:
+    properties:
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  authenticationhandler.registerStudent:
+    properties:
+      firstname:
+        maxLength: 32
+        minLength: 1
+        type: string
+      gender:
+        enum:
+        - men
+        - women
+        - neutral
+        type: string
+      lastname:
+        maxLength: 32
+        minLength: 1
+        type: string
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+      pseudo:
+        type: string
+    required:
+    - firstname
+    - gender
+    - lastname
+    - password
+    - pseudo
+    type: object
+  authenticationhandler.studentLogin:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  authenticationhandler.tokensReq:
+    properties:
+      refreshToken:
+        type: string
+    type: object
+  authenticationhandler.tokensResponse:
+    properties:
+      duration:
+        type: integer
+      tokens:
+        $ref: '#/definitions/tokenservice.PairToken'
+    type: object
+  ent.AdminDisplayFront:
+    properties:
+      pseudo:
+        description: Pseudo holds the value of the "pseudo" field.
+        type: string
+    type: object
+  ent.AdminFront:
+    properties:
+      display:
+        $ref: '#/definitions/ent.AdminDisplayFront'
+      id:
+        type: string
+    type: object
+  ent.StudentDisplayFront:
+    properties:
+      birthday:
+        type: string
+      firstname:
+        type: string
+      gender:
+        $ref: '#/definitions/primitive.Gender'
+      lastname:
+        type: string
+      pseudo:
+        type: string
+    type: object
+  ent.StudentFront:
+    properties:
+      display:
+        $ref: '#/definitions/ent.StudentDisplayFront'
+      id:
+        type: string
+    type: object
+  primitive.Gender:
+    enum:
+    - men
+    - women
+    - neutral
+    type: string
+    x-enum-varnames:
+    - GenderMen
+    - GenderWomen
+    - GenderNeutral
+  tokenservice.PairToken:
+    description: PairToken is used for returning pairs of id and refresh tokens
+    properties:
+      idToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+info:
+  contact:
+    email: info@domain.TLD
+    name: Your name
+    url: https://domain.TLD
+  description: |-
+    This document's purpose is to document the API
+    used by this backend for further interaction with the front-end
+  termsOfService: https://domain.TLD
+  title: API
+  version: "1.0"
+paths:
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        This handler purpose is to log in an admin by the specified email
+        and password, it then returns a specific Token Pair associated with the admin.
+      parameters:
+      - description: Admin login
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/authenticationhandler.adminLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tokenservice.PairToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apistatus.ErrorInvalidArgs'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      summary: Sign in an admin
+      tags:
+      - Admin Authentication
+  /admin/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apistatus.SuccessStatus'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Signout handler
+      tags:
+      - Admin Authentication
+  /admin/me:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.AdminFront'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Me admin entity
+      tags:
+      - Admin Authentication
+    patch:
+      parameters:
+      - description: Admin new info
+        in: body
+        name: adminInfo
+        required: true
+        schema:
+          $ref: '#/definitions/adminsettinghandler.updateAdmin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.AdminFront'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apistatus.ErrorInvalidArgs'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Update the Admin Profile
+      tags:
+      - Admin Setting
+  /admin/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Admin registration
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/authenticationhandler.registerAdmin'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/tokenservice.PairToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apistatus.ErrorInvalidArgs'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      summary: Signup admin entity
+      tags:
+      - Admin Authentication
+  /admin/tokens:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Your refresh token
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/authenticationhandler.tokensReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authenticationhandler.tokensResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Return new token and refresh token for admin
+      tags:
+      - Admin Authentication
+  /student/login:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        This handler purpose is to log in a student by the specified login
+        and password, it then returns a specific Token Pair associated with the student.
+      parameters:
+      - description: Student login
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/authenticationhandler.studentLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tokenservice.PairToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apistatus.ErrorInvalidArgs'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      summary: Sign in a student
+      tags:
+      - Student Authentication
+  /student/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/apistatus.SuccessStatus'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Signout handler
+      tags:
+      - Student Authentication
+  /student/me:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.StudentFront'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Me student entity
+      tags:
+      - Student Authentication
+  /student/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Student registration
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/authenticationhandler.registerStudent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/tokenservice.PairToken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apistatus.ErrorInvalidArgs'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      summary: Signup student entity
+      tags:
+      - Student Authentication
+  /student/tokens:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Your refresh token
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/authenticationhandler.tokensReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/authenticationhandler.tokensResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/apistatus.ErrorAPI'
+      security:
+      - ApiKeyAuth: []
+      summary: Return new token and refresh token for student
+      tags:
+      - Student Authentication
+schemes:
+- https
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    description: JWT Token
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

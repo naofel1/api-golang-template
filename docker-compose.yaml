@@ -1,0 +1,100 @@
+version: "3.9"
+
+# ************************************************************
+# *                  SERVICES                                *
+# ************************************************************
+services:
+    # ****************MONOLITH*****************
+  monolith:
+    init: true
+    container_name: api_monolith
+    image: api_monolith
+    restart: always
+    build:
+      context: ./deploy/local
+      dockerfile: Dockerfile.monolith
+    depends_on:
+     - db
+    working_dir: /go/src/api
+    volumes:
+      - .:/go/src/api
+    ports:
+     - "${MONOLITH_PORT}:${MONOLITH_PORT}"
+    env_file:
+      - .env
+    networks:
+      internal-proxy:
+
+    # *******************MARIA DB*****************
+  db:
+    init: true
+    container_name: api_mariadb
+    image: mariadb:10.8
+    restart: always
+    environment:
+      MARIADB_DATABASE: ${API_DB_DATABASE}
+      MARIADB_USER: ${API_DB_USER}
+      MARIADB_PASSWORD: ${API_DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${API_DB_ROOT_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+     - db-data:/var/lib/mysql
+    ports:
+     - "${MARIADB_PORT}:3306"
+    networks:
+      internal-proxy:
+
+    # *******************REDIS********************
+  redis:
+    init: true
+    container_name: api_redis
+    image: redis:alpine
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWD}
+    env_file:
+      - .env
+    volumes:
+     - db-data:/var/lib/mysql
+    ports:
+     - "${REDIS_PORT}:6379"
+    networks:
+      internal-proxy:
+
+    # *******************JAEGER********************
+  jaeger:
+    init: true
+    container_name: api_jaeger
+    image: jaegertracing/all-in-one:latest
+    restart: always
+    ports:
+     - "${JAEGER_PORT}:6831/udp"
+     - "${JAEGER_UI_PORT}:16686"
+     - "${JAEGER_COLLECTOR_PORT}:14268"
+    env_file:
+      - .env
+    networks:
+      internal-proxy:
+
+    # *****************CENTRIFUGO******************
+  centrifugal:
+    image: centrifugo/centrifugo
+    command: centrifugo -c config.json
+    ports:
+    - "${CENTRIFUGO_PORT}:${CENTRIFUGO_PORT}"
+    volumes:
+    - "./configs/centrifugo:/centrifugo"
+
+# ************************************************************
+# *                  NETWORK                                 *
+# ************************************************************
+networks:
+  internal-proxy:
+    external: false
+
+# ************************************************************
+# *                  VOLUMES                                 *
+# ************************************************************
+volumes:
+  db-data:
+    name: mariaDB

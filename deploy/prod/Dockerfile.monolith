@@ -1,0 +1,19 @@
+FROM golang:1.19-alpine as builder
+
+WORKDIR /go/src/api
+# ENV GOPROXY="https://nexus.my_domain.TLD/repository/my_repo/"
+
+COPY go.mod ./
+RUN go mod tidy
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /go/bin/monolith ./cmd/monolith/main.go
+
+FROM alpine:3.13
+
+WORKDIR /api
+COPY --from=builder /go/src/api/configs/ ./configs/
+COPY --from=builder /go/bin/monolith .
+
+CMD ["/api/monolith"]
