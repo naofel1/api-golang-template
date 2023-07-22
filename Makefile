@@ -93,20 +93,23 @@ diagram:
 #######################
 
 test:
-	go test ./...
+	# Angus: The Go race detector is an incredible tool. It will crash the program and warn you if it detects a data
+	# race in your code. This has helped me catch many concurrency errors I've made. ALWAYS enable it for tests and
+	# local development. Avoid it in production and benchmarks, because it slows the program down significantly.
+	go test -race ./...
 
 test.v:
-	go test ./... -v
+	go test -race ./... -v
 
 ###########
 #  Local  #
 ###########
 
 local:
-	go run cmd/monolith/main.go
+	go run -race cmd/monolith/main.go
 
 local.up:
-	go run cmd/monolith/main.go
+	go run -race cmd/monolith/main.go
 
 ##################
 #  Local Docker  #

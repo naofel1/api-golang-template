@@ -22,6 +22,22 @@ import (
 )
 
 func TestAuthenticationHandler_SignoutStudent(t *testing.T) {
+	/*
+		 	Angus: Look into how to run tests in parallel with t.Parallel(). My rules that almost all tests should be
+			parallelized, all the time, from day one. As your application grows, your test suite will stay super fast, and
+			all the developers on your team will get into the habit of writing thread-safe tests. Parallelizing everything
+			also allows the Go race detector to detect certain data races automatically when you run your tests. This is
+			much better than discovering these issues in production!
+
+			If you find that running tests in parallel causes race conditions (e.g. because they share mutable state), this
+			is usually a sign that the code being tested should be improved!
+
+			The only tests that can't be parallelized are ones that interact with the environment (e.g. setting and
+			unsetting env vars).
+
+			Even integration tests can be parallelized, so long as you make sure that all fields with unique constraints
+			are randomly generated, and that each test cleans up ONLY the records it creates in the repositories.
+	*/
 	// Setup
 	gin.SetMode(gin.TestMode)
 
