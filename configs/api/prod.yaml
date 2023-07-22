@@ -1,3 +1,12 @@
+# Angus: Remember that in prod, we typically want to inject sensitive environment variables like connection strings,
+# etc. via the environment. You can choose to do that by injecting a whole yaml file (but this shouldn't be stored in
+# your repo, since it contains sensitive information), by using some kind of yaml templating system, where a yaml file
+# is constructed from a template and environment variables, or by reading config directly from the environment instead
+# of from a yaml file.
+#
+# I like the last option, personally, because you can store your secrets in GitHub Environments, which is free and makes
+# injecting secrets for CI super easy.
+# There are many secrets management options out there though, and many will work well with yaml files.
 ---
 app_info:
   mode: development

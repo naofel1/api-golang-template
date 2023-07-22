@@ -1,4 +1,7 @@
 /* Requires the Docker Pipeline plugin */
+/*
+    Angus: Out of curiosity (not a criticism), what made you choose Jenkins over GitHub Actions?
+*/
 pipeline {
     agent  {
         label 'dind-agent'
@@ -25,6 +28,10 @@ pipeline {
                 }
             }
         }
+        /*
+            Angus: Wow, there's a lot going on in this repo! ArgoCD too?! Hardcore :)
+            As a potential user of your API template, I would want to see more comments in your deploy files, Dockerfiles, compose file,
+        */
         stage('Update image on ArgoCD') {
             environment {
                 HELM_GIT_REPO_URL = 'gitlab.com/my-api/kubernetes.git'

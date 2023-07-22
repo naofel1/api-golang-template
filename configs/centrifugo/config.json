@@ -2,7 +2,7 @@
     "admin": true,
 	"engine": "memory",
     "allowed_origins": ["*"],
-    "token_hmac_secret_key": "centrifugo",
+    "token_hmac_secret_key": "centrifugo", // Angus: storing these secrets in plain test is risky, unless centrifugo is always dev-only
     "admin_password": "centrifugo",
     "admin_secret": "centrifugo",
     "api_key": "centrifugo",

@@ -1,10 +1,15 @@
+# Angus: Love this. Great structure, well thought out. Impressive to see you thinking of this stuff.
+
 ifneq ("$(wildcard .env)","")
-  include .env
-  export
+	# Angus: fun fact: not every environment variable that can be expressed in a .env file can be included in a Makefile.
+	# This include directive will fail if you have any multi-line environment variables (e.g. PEM strings). This makes
+	# me very sad and I've wasted many hours trying to find a way around it. Be warned!
+	include .env
+	export
 else
-  $(shell cp .env.example .env)
-  include .env
-  export
+	$(shell cp .env.example .env)
+	include .env
+	export
 endif
 
 ##################################################
