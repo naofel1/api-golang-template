@@ -27,6 +27,11 @@ func (s *bucketService) UploadHealthCheckResult(ctx context.Context, bucketName,
 	if err != nil {
 		s.Logger.Error("Cannot upload file", zap.Error(err))
 
+		/*
+			Angus: Careful! You have a repository error creeping into your domain layer. The domain shouldn't know
+			anything about AWS or S3 :) The BucketRepository implementation should translate its errors into error types
+			defined by the domain.
+		*/
 		var awsErr awserr.Error
 		if ok := errors.As(err, &awsErr); ok && awsErr.Code() == request.CanceledErrorCode {
 			// If the SDK can determine the request or retry delay was canceled

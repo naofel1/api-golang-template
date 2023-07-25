@@ -45,6 +45,10 @@ func main() {
 	conf.GetConfig(ctx, logger)
 
 	// Set OpenTelemetry Information
+	/*
+		Angus: Very, very cool to see you thinking about tracing. Most companies are in production struggling to debug
+		their services long before they get round to implementing tracing.
+	*/
 	tracing.SetOpenTelemetryInfo(ctx, logger, tracing.JaegerTraceProvider(ctx, logger, conf))
 
 	// Load all used utility

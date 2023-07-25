@@ -1,3 +1,7 @@
+# Angus: I'm very happy to see linter config in this repo! Doing this at the START of a project, and not when you have
+# tens of thousands of lines of unlinted code saves HOURS of time. It also helps the team understand that they're
+# working to high, shared standards.
+
 # Options for analysis running.
 run:
   # The default concurrency value is the number of available CPU.
