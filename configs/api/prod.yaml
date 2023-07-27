@@ -7,6 +7,12 @@
 # I like the last option, personally, because you can store your secrets in GitHub Environments, which is free and makes
 # injecting secrets for CI super easy.
 # There are many secrets management options out there though, and many will work well with yaml files.
+#
+# Naofel: Ok now I uderstand more in depth what you mean by injecting the general config in the environment. Because yes,
+# as there are sensitive information in the config file, we can't store it in the repo. I really like the last option too,
+# I will implement it in the template. However, I'm intrigued to hear more of your thoughts on this matter.
+# In a more general case like in a company, what do you think about this? Does the yaml file is a good option to store
+# application configuration with non sensitive information, like application address, port etc...?
 ---
 app_info:
   mode: development

@@ -37,6 +37,9 @@ func TestAuthenticationHandler_SignoutStudent(t *testing.T) {
 
 			Even integration tests can be parallelized, so long as you make sure that all fields with unique constraints
 			are randomly generated, and that each test cleans up ONLY the records it creates in the repositories.
+
+			Naofel: Very interesting, I didn't know that. While I have implemented t.Parallel() in certain tests, I hadn't
+			adopted it as a standard approach until now 😄. I think when the application grow it can really do the difference!
 	*/
 	// Setup
 	gin.SetMode(gin.TestMode)

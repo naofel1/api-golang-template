@@ -1,15 +1,13 @@
 {
-    "admin": true,
-	"engine": "memory",
-    "allowed_origins": ["*"],
-    "token_hmac_secret_key": "centrifugo", // Angus: storing these secrets in plain test is risky, unless centrifugo is always dev-only
-    "admin_password": "centrifugo",
-    "admin_secret": "centrifugo",
-    "api_key": "centrifugo",
-    "client_insecure": true,
-    "history_size": 10,
-    "history_ttl": "60s",
-    "proxy_http_headers": [
-        "Cookie"
-    ]
+  "admin": true,
+  "engine": "memory",
+  "allowed_origins": ["*"],
+  "token_hmac_secret_key": "centrifugo", // Angus: storing these secrets in plain test is risky, unless centrifugo is always dev-only
+  "admin_password": "centrifugo", // Naofel: you are fully right, I will try to fix this by using env variable to define password of centrifugo
+  "admin_secret": "centrifugo",
+  "api_key": "centrifugo",
+  "client_insecure": true,
+  "history_size": 10,
+  "history_ttl": "60s",
+  "proxy_http_headers": ["Cookie"]
 }

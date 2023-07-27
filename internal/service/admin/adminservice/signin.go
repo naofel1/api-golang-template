@@ -51,6 +51,11 @@ func (s *adminService) Signin(ctx context.Context, u *ent.Admin) error {
 				repository (or from some other third-party package) that DOESN'T map to a domain error types, it gets
 				passed all the way back up the chain to the global recovery handler, which will translate it to a 500.
 
+				Naofel: Oh wow, your approach to error handling sounds incredibly efficient. Handling every individual error
+				in each service can be quite a headache, so your solution seems like a breath of fresh air. It's fantastic to
+				have these domain-specific error types and let the repository layer map its errors accordingly. The concept of
+				allowing unanticipated errors to travel up the chain to the global recovery handler for resolution also sounds
+				wonderfully effective.
 			*/
 			return apistatus.NewInternal()
 		}

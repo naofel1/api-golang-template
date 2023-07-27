@@ -1,6 +1,16 @@
 /* Requires the Docker Pipeline plugin */
 /*
     Angus: Out of curiosity (not a criticism), what made you choose Jenkins over GitHub Actions?
+
+
+    Naofel: Thanks for your question. When I initially began creating a pipeline at work,
+    Jenkins was the first tool I came across. Its comprehensiveness and user-friendly nature immediately
+    struck me. While I haven't personally experimented with GitHub Actions, I really appreciate its
+    simplicity and effectiveness, particularly for smaller projects such as this.
+
+    Jenkins, however, has proven its worth by enabling me to construct a robust and efficient pipeline
+    with parallel stages for quick building and deployment of applications. I believe the choice between
+    the two really boils down to the specific needs and scale of the project at hand.
 */
 pipeline {
     agent  {
@@ -31,6 +41,14 @@ pipeline {
         /*
             Angus: Wow, there's a lot going on in this repo! ArgoCD too?! Hardcore :)
             As a potential user of your API template, I would want to see more comments in your deploy files, Dockerfiles, compose file,
+
+            Naofel:  Quite a lot happening here, including ArgoCD 😄. When I started designing a pipeline to update my image on ArgoCD,
+            it was a steep learning curve. However, the 'yq' command-line tool provided me with a straightforward method to update tags,
+            which was a game-changer.
+
+            I totally agree with you on the need for more documentation. For a potential user, the current format can be overwhelming and
+            difficult to navigate. I'm going to prioritize adding comprehensive comments and improving documentation to make it more user-friendly.
+            Thanks for your suggestion; it's valuable feedback like this that helps me enhance the project.
         */
         stage('Update image on ArgoCD') {
             environment {

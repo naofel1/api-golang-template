@@ -3,6 +3,8 @@ FROM golang:1.19 as build
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Angus: I did not know about this repo, and you have changed my life 😂
+#
+# Naofel: I'm very happy to help you! Hot-reload is a must-have for local development 😄.
 RUN curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s
 
 CMD ["air", "--build.cmd", "go build -o bin/monolith cmd/monolith/main.go", "--build.bin", "./bin/monolith"]

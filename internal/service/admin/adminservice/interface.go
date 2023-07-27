@@ -38,6 +38,14 @@ import (
 		 domain models.
 
 	This is a lot of work initially, but it's the gold standard for keeping large applications maintainable.
+
+
+	Naofel: I'm profoundly enlightened by your thorough analysis, as it resonates well with my experiences.
+	I must admit, I'm not deeply familiar with the various architectural patterns. Could you recommend some resources
+	for better understanding? I wholeheartedly agree with your insights about Ent, especially its suitability for smaller apps.
+	As our table count grows, the file generation process becomes considerably time-consuming and difficult to maintain.
+	Your insights on hexagonal architecture have significantly filled gaps in my knowledge, and I greatly appreciate it.
+	I'm eager to apply your recommendations to my template, to achieve full compliance with hexagonal architecture. 😄
 */
 type Interface interface {
 	Signin(ctx context.Context, u *ent.Admin) error
@@ -62,6 +70,11 @@ type Config struct {
 		This is a totally acceptable thing to do, just be aware that that's the trade-off you're making :)
 
 		I'll discuss how we can reduce the impact of this decision in another comment.
+
+		Naofel: Your points are truly enlightening, and they made me consider the idea of creating our own logger wrapper,
+		which could utilize zap and otel behind the scenes. This way, we could easily switch out the logger if necessary
+		in the future. I've been pondering over the performance aspects as well.  I'm curious about how much of an impact
+		the zero allocation approach of zap actually has. What do you think? I'm all ears for your thoughts and insights! 💡
 	*/
 	Logger *otelzap.Logger
 }
@@ -85,6 +98,8 @@ type adminService struct {
 /*
 	Angus: If I recall correctly, the words for "wait" and "expect" are the same in French? They mean quite different
  	things in English!
+
+	Naofel: Yes you are correct, I think some other comment I made can have this problem too, I will try to be more careful.
 */
 // AtomicOperation is the format expected by AtomicRepository.
 type AtomicOperation func(context.Context, Repository) error
@@ -119,6 +134,13 @@ type AtomicOperation func(context.Context, Repository) error
 
 	AtomicOperations have a small performance overhead (not relevant to most applications, but it can be for
 	high-performance systems), so avoiding them when they're not needed is a good idea.
+
+	Naofel: Naofel: Ah, I'm starting to get a clearer picture now. Initially, I only needed to implement a simple Repository for my work,
+	but as some of our logic required atomic operations, I thought it would be a good idea to incorporate it into the interface. Your
+	Medium article about implementing AtomicRepository was very informative, but I couldn't quite find a way to maintain both functionalities
+	with ent. Hence, I stuck with AtomicRepository. Your example has been a great help in understanding the true role of AtomicRepository - it
+	really clears things up! Now I understand it's specifically needed when our business logic has to be executed after a transaction has begun,
+	but before it's committed. It seems I may have overused it for simple operations too. 😄 This has been a great learning experience! Thank you!
 */
 type AtomicRepository interface {
 	Execute(context.Context, AtomicOperation) error

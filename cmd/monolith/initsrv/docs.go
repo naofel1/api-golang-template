@@ -15,4 +15,14 @@ package initsrv
 
 	Side note: Be careful with pluralisation of your type names. In initsrv, [Repository] refers to an object containing
 	many repositories. A clearer name would be [Repositories] :)
+
+
+	Naofel: I appreciate your insights. You're correct, the initsrv package does need refining. As part of my work,
+	we manage numerous microservices along with a monolithic system that encompasses all these microservices. Prior to
+	creating this package, I had all initializations crammed into the main.go file, which rendered the process rather
+	chaotic and opaque. Thus, my decision to compartmentalize the initialization steps into a dedicated package.
+	But I think wire package can be great for my problem, I try to check how it work and how to use it but I didn't
+	find concret example. Do you have a concret example of how to use it ? Thank you again for your feedback.
+
+	Oops, yes Repositories is better :)
 */

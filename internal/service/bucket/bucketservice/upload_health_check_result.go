@@ -31,6 +31,9 @@ func (s *bucketService) UploadHealthCheckResult(ctx context.Context, bucketName,
 			Angus: Careful! You have a repository error creeping into your domain layer. The domain shouldn't know
 			anything about AWS or S3 :) The BucketRepository implementation should translate its errors into error types
 			defined by the domain.
+
+			Naofel: Oh, wow! I hadn't realized that. I'll make sure to correct this oversight about the repository error
+			seeping into the domain layer in my upcoming release.
 		*/
 		var awsErr awserr.Error
 		if ok := errors.As(err, &awsErr); ok && awsErr.Code() == request.CanceledErrorCode {

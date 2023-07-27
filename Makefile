@@ -4,6 +4,12 @@ ifneq ("$(wildcard .env)","")
 	# Angus: fun fact: not every environment variable that can be expressed in a .env file can be included in a Makefile.
 	# This include directive will fail if you have any multi-line environment variables (e.g. PEM strings). This makes
 	# me very sad and I've wasted many hours trying to find a way around it. Be warned!
+	#
+	# Naofel: I conducted a small test to verify your claim since I had never used multiline variables
+	# in my env file before, and you were right. Although you can use backslashes at the end of each line to create a
+	# multiline variable, it introduces unwanted spaces when there are newlines. Consequently, I discovered that the
+	# only effective approach is to run a bash script beforehand, although it does not directly use the env file.
+	# This discovery is quite intriguing! 🧐 Thank you for the tips! 😀 https://gist.github.com/naofel1/bb9b497b11707be79db381a00c81e17a
 	include .env
 	export
 else
@@ -96,6 +102,8 @@ test:
 	# Angus: The Go race detector is an incredible tool. It will crash the program and warn you if it detects a data
 	# race in your code. This has helped me catch many concurrency errors I've made. ALWAYS enable it for tests and
 	# local development. Avoid it in production and benchmarks, because it slows the program down significantly.
+	#
+	# Naofel: Ok I will always use it now for tests and local development. Thank you for the tips! 😀
 	go test -race ./...
 
 test.v:
